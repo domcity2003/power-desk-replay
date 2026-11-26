@@ -94,6 +94,14 @@ if (globalThis.marketStudyData) {
       ? "The fixed buffer saved " + money(-topTwo) + " across " + first.date + " and " + second.date +
         ". Without those dates, its total cost change was " + delta(fixed.total - baseline.total - topTwo) + "."
       : "The fixed buffer produced no savings days.";
+    if (fixed.total !== baseline.total) {
+      const interval = MarketStudy.bootstrap(days, 1);
+      $("uncertainty").textContent = "Resampling the test period in seven-day blocks puts the fixed buffer's total change between " +
+        delta(interval.low) + " and " + delta(interval.high) + " (95% interval). In " +
+        Math.round(interval.shareNotSaving * 100) + "% of resamples it saved nothing.";
+    } else {
+      $("uncertainty").textContent = "";
+    }
     const enabledHours = hours.flatMap((enabled, hour) => enabled ? [labelHour(hour)] : []);
     $("calibrated-hours").textContent = enabledHours.length ? enabledHours.join(", ") + " ET." : "No hours qualified.";
     renderRows("scorecard", summary.map((item, index) => [

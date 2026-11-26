@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="study.css">
   <script defer src="model.js"></script>
   <script defer src="study-model.js"></script>
-  <script defer src=".local-study/study-data.js"></script>
+  <script defer src="data/study-data.js"></script>
   <script defer src="study.js"></script>
 </head>
 <body class="study">
@@ -28,7 +28,7 @@
     </div>
     <section class="panel" id="data-needed">
       <h2>Prepare the historical prices</h2>
-      <p>Run <code>pwsh -File download-study.ps1</code> with Node.js installed, then reload this page. The script downloads the official NYISO archives to this checkout.</p>
+      <p>Run <code>pwsh -File download-study.ps1</code> with Node.js installed, then reload this page. The bundled price file is missing; the script downloads the official NYISO archives and rebuilds it.</p>
       <p><a href="STUDY.md">Read the findings and methodology</a></p>
     </section>
     <div id="results" hidden>
@@ -49,6 +49,7 @@
         <div class="study-legend"><span>Fixed peak buffer</span><span>Calibrated peak buffer</span></div>
         <svg id="curve" viewBox="0 0 840 230" role="img" aria-label="Cumulative cost changes by rule. Monthly values are available below."></svg>
         <p class="hour-review" id="concentration"></p>
+        <p class="hour-review" id="uncertainty"></p>
         <details>
           <summary>Monthly cost changes</summary>
           <div class="table-scroll" tabindex="0" role="region" aria-label="Monthly cost changes">

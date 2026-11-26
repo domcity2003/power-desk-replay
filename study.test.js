@@ -2,7 +2,7 @@
 
 const assert = require("node:assert/strict");
 const { test } = require("node:test");
-const { evaluate } = require("./study-model");
+const { evaluate, bootstrap } = require("./study-model");
 const { parseZone } = require("./prepare-study");
 
 const date = "2025-04-01";
@@ -45,4 +45,20 @@ test("NYISO parser rejects missing, duplicate, off-hour and wrong-zone records",
   assert.throws(() => parse([lines[0].replace("00:00", "00:05"), ...lines.slice(1)]), /invalid/);
   assert.throws(() => parse([lines[0].replace("61761", "61760"), ...lines.slice(1)]), /invalid/);
   assert.throws(() => parse([lines[0].replace("04/01/2025", "04/02/2025"), ...lines.slice(1)]), /invalid/);
+});
+
+test("the bundled NYISO data reproduces the figures quoted in STUDY.md", () => {
+  require("./data/study-data.js");
+  const data = globalThis.marketStudyData;
+  assert.equal(data.sourceHash, "ae7b6ce7f20fa64a3c3e3f68d575b9aa86fe1d13de5f638338125116a1a06447");
+  assert.equal(data.calibration.length, 89);
+  assert.equal(data.evaluation.length, 274);
+  const { days, summary } = evaluate(data, 5);
+  const [forecast, fixed, calibrated] = summary;
+  assert.equal(forecast.total, 3484171637);
+  assert.equal(fixed.total - forecast.total, -5245220);
+  assert.equal(calibrated.total - forecast.total, -3239050);
+  assert.deepEqual([fixed.lowerCostDays, fixed.higherCostDays], [72, 125]);
+  const interval = bootstrap(days, 1);
+  assert.ok(interval.low < 0 && interval.high > 0, "the 95% interval should include zero");
 });

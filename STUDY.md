@@ -1,10 +1,10 @@
 # A lower bill can hide a riskier schedule
 
-**Decision memo · November 26, 2026 · GPT-6**
+**Decision memo · November 26, 2026**
 
 ## Keep the forecast-only schedule for now
 
-Buying 5 extra MWh in every weekday peak hour cut the simulated buyer’s April–December energy cost by $52,452, or 0.15%. It raised the bill on 125 days and lowered it on 72. The two best days saved $65,778 between them. Remove both as a sensitivity check and the same rule costs $13,326 more than forecast only. The forecast-only schedule is a better default on this evidence. Before changing it, test whether the result survives another year and compare the worst-day exposure the desk is willing to accept.
+Buying 5 extra MWh in every weekday peak hour cut the simulated buyer’s April–December energy cost by $52,452, or 0.15%. It raised the bill on 125 days and lowered it on 72. The two best days saved $65,778 between them. Remove both as a sensitivity check and the same rule costs $13,326 more than forecast only. Resampling the evaluation period in seven-day blocks gives a 95% interval of −$212,735 to +$56,078 for the total change, and 22% of resamples show no saving at all. The saving cannot be distinguished from zero. The forecast-only schedule is a better default on this evidence. Before changing it, test whether the result survives another year and compare the worst-day exposure the desk is willing to accept.
 
 | Schedule | Total cost | Change vs forecast | Most expensive day | Mean of the 28 most expensive days | Cheaper / costlier days |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -30,7 +30,7 @@ Open [the historical study](study.html) and select **Biggest saving** or **Bigge
 
 ## Reproduce
 
-Run `pwsh -File download-study.ps1`, then open [study.html](study.html). The script fetches 12 monthly archives per feed and validates each input before it creates the local dataset. Run `node --test` to check source handling, calibration, and the settlement math.
+Open [study.html](study.html); the derived NYC price file is bundled in `data/`. To rebuild it, run `pwsh -File download-study.ps1`. The script fetches 12 monthly archives per feed and validates each input before it writes the dataset. Run `node --test` to check source handling, calibration, and the settlement math.
 
 Source CSV fingerprint for inputs used in this memo (SHA-256)
 

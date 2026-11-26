@@ -56,7 +56,7 @@ function build(root) {
 if (require.main === module) {
   const root = join(__dirname, ".local-study");
   const data = build(root);
-  writeFileSync(join(root, "study-data.js"), "globalThis.marketStudyData = " + JSON.stringify(data) + ";\n");
+  writeFileSync(join(__dirname, "data", "study-data.js"), "globalThis.marketStudyData = " + JSON.stringify(data) + ";\n");
   console.log("Prepared " + data.calibration.length + " calibration days and " + data.evaluation.length + " evaluation days.");
   console.log("Source SHA-256: " + data.sourceHash);
 }

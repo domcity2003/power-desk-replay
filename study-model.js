@@ -65,7 +65,32 @@ const MarketStudy = (() => {
     return { hours, days, summary: summarize(days) };
   }
 
-  return { policies, amounts, evaluate };
+  // Moving-block bootstrap of the total change versus forecast only. Seven-day blocks keep
+  // weekly and weather-driven runs of price spikes together. The seeded generator makes the
+  // interval reproducible.
+  function bootstrap(days, index, { draws = 20000, block = 7, seed = 12345 } = {}) {
+    const deltas = days.map(day => day.costs[index] - day.costs[0]);
+    const n = deltas.length;
+    let state = seed;
+    const random = () => (state = (state * 1103515245 + 12345) % 2147483648) / 2147483648;
+    const totals = [];
+    for (let draw = 0; draw < draws; draw++) {
+      let total = 0;
+      for (let filled = 0; filled < n;) {
+        const start = Math.floor(random() * (n - block + 1));
+        for (let step = 0; step < block && filled < n; step++, filled++) total += deltas[start + step];
+      }
+      totals.push(total);
+    }
+    totals.sort((a, b) => a - b);
+    return {
+      low: totals[Math.floor(draws * 0.025)],
+      high: totals[Math.floor(draws * 0.975)],
+      shareNotSaving: totals.filter(total => total >= 0).length / draws,
+    };
+  }
+
+  return { policies, amounts, evaluate, bootstrap };
 })();
 
 if (typeof module !== "undefined") module.exports = MarketStudy;
