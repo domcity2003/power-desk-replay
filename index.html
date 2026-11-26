@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Power Desk Replay</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="model.js"></script>
+  <script defer src="scenarios.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="wrap masthead-inner">
+      <div><span class="mark" aria-hidden="true">↯</span> Power Desk Replay</div>
+      <span class="market">PJM Western Hub · Simulated data</span>
+    </div>
+  </header>
+  <main class="wrap">
+    <div class="page-heading">
+      <div>
+        <h1>Morning cost review</h1>
+        <p>Review yesterday’s energy cost before signing off.</p>
+      </div>
+      <div class="scenarios" role="group" aria-label="Replay scenario">
+        <button type="button" data-scenario="normal">Normal day</button>
+        <button type="button" data-scenario="cold">Cold snap</button>
+        <button type="button" data-scenario="broken">Broken inputs</button>
+      </div>
+    </div>
+    <section class="overview" aria-label="Cost and review status">
+      <div><h2>Energy cost estimate</h2><strong id="total"></strong><p id="variance"></p></div>
+      <div><h2>Normal-day baseline</h2><strong id="baseline"></strong><p>Same hub · 24 hours</p></div>
+      <div><h2>Review status</h2><p id="status" role="status"></p><a href="#review">Go to sign-off ↓</a></div>
+    </section>
+    <div class="analysis-grid">
+      <section class="panel chart-panel">
+        <div class="panel-title">
+          <h2>Hourly power prices</h2>
+          <span>USD / MWh</span>
+        </div>
+        <div class="legend"><span>Day-ahead</span><span>Real-time</span></div>
+        <canvas id="price-chart" role="img" aria-label="Hourly day-ahead and real-time price chart. Prices are listed in the hourly ledger."></canvas>
+        <div class="hour-review">
+          <div class="panel-title"><h3 id="hour-title"></h3><a href="#ledger">View hourly ledger ↓</a></div>
+          <p id="hour-detail"></p>
+        </div>
+      </section>
+      <section class="panel drivers">
+        <div class="panel-title"><h2>Cost drivers</h2></div>
+        <p class="subtle">Change versus the normal day</p>
+        <dl id="drivers"></dl>
+        <p class="driver-foot" id="driver-note"></p>
+      </section>
+    </div>
+    <section class="panel" id="review">
+      <div class="panel-title"><h2>Input review &amp; sign-off</h2><button type="button" id="export" class="button outline" disabled>Download ledger CSV</button></div>
+      <p id="review-summary"></p>
+      <div id="issues"></div>
+      <form id="sign-form">
+        <label for="reviewer">Reviewer name</label>
+        <div class="form-row"><input id="reviewer" required maxlength="60" autocomplete="off" placeholder="Your name"><button class="button primary" type="submit">Sign off</button></div>
+      </form>
+      <div id="review-log" hidden><h3>Review history</h3><ol id="events"></ol></div>
+    </section>
+    <section class="panel" id="ledger">
+      <div class="panel-title"><h2>Hourly ledger</h2><span>Eastern time</span></div>
+      <p class="subtle">Select an hour to see the calculation. Balancing cost reflects the difference between scheduled and used energy.</p>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable hourly ledger">
+        <table>
+          <thead><tr><th scope="col">Hour</th><th scope="col">Scheduled<br>MWh</th><th scope="col">Used<br>MWh</th><th scope="col">Day-ahead<br>$/MWh</th><th scope="col">Real-time<br>$/MWh</th><th scope="col">Day-ahead<br>cost</th><th scope="col">Balancing<br>cost</th><th scope="col">Total<br>cost</th></tr></thead>
+          <tbody id="hourly"></tbody>
+        </table>
+      </div>
+    </section>
+    <footer>Hourly energy-cost model. Prices, volumes, and correction records are fictional. Sign-off is a demo action.</footer>
+  </main>
+</body>
+</html>
