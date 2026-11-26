@@ -22,3 +22,10 @@ The first release models one 24-hour market day at a single hub using hourly ene
 - Five model tests passed. These include the hand-worked shortfall, surplus and negative-price cases, the cost breakdown, and repairing the two errors in either order.
 - An isolated copy passed the Edge walkthrough. The cold-snap estimate was $142,119, up $58,556 from the normal day. The broken scenario stayed on hold after one correction and returned to $142,119 after both. The downloaded CSV contained 24 hourly rows that summed to that total.
 - Checked the desktop and 390-pixel mobile layouts, separate review state for each scenario, and focus when drilling into an hour. Sign-off and the correction history last for the browser session. The CSV contains the hourly inputs and costs.
+
+## Historical study follow-up
+
+1. Pair the official NYISO day-ahead and integrated real-time prices for New York City. Validate every included timestamp and retain a fingerprint of the source files.
+2. Fit the calibrated weekday schedule on January–March. Compare it with forecast only and a fixed peak buffer over April–December at the same buyer load.
+3. Show costs, expensive-day exposure, and dependence on the best days. Trace individual changes to their hourly price spread and purchase amount.
+4. Reconcile the observed total independently from the raw CSVs and check the dashboard, daily export, and mobile layout. See [the study memo](STUDY.md) for the decision and limits.

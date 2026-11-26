@@ -1,0 +1,24 @@
+.study .masthead a { color: #e0eee4; font-size: .85rem; }
+.study .page-heading { margin-bottom: 18px; }
+.study .market-label { color: var(--teal); font-weight: 700; font-size: .83rem; letter-spacing: .025em; margin: 0 0 8px; }
+.study-top, .study-actions, .study-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.study-top { justify-content: space-between; }
+.study-top p { margin: 0; }
+.study-top label, .study-note, .rule-list, .study summary { font-size: .86rem; }
+.study select { font: inherit; padding: .4rem; border: 1px solid #9aab9f; border-radius: 4px; background: white; color: var(--ink); margin-left: 5px; }
+.study-legend { color: var(--muted); font-size: .8rem; margin-top: 12px; }
+.study-legend span::before { content: ""; display: inline-block; width: 16px; border-top: 3px solid var(--teal); vertical-align: middle; margin-right: 6px; }
+.study-legend span:last-child::before { border-color: var(--accent); border-top-style: dashed; }
+#curve { display: block; width: 100%; height: auto; margin: 4px 0 10px; overflow: visible; }
+#curve text { fill: var(--muted); font-family: inherit; font-size: 15px; }
+.study summary { cursor: pointer; color: var(--teal); font-weight: 650; width: fit-content; }
+.rule-list { display: grid; gap: 9px; margin: 14px 0 0; }
+.rule-list dt { font-weight: 700; }
+.rule-list dd { margin: 1px 0 0; color: var(--muted); }
+#day-review .study-top { margin-top: 12px; }
+#day-note { font-size: .87rem; }
+@media (max-width: 480px) {
+  .study .overview { grid-template-columns: 1fr; }
+  .study .overview > div + div { border-left: 0; border-top: 1px solid var(--line); }
+  #curve text { font-size: 25px; }
+}

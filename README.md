@@ -1,10 +1,17 @@
 # Power Desk Replay
 
-An analyst reviewing yesterday’s electricity cost needs to explain the expensive hours and know when to hold the report. This browser demo walks through that review for a fictional power buyer at PJM Western Hub.
+Power Desk Replay follows two decisions a power analyst faces. The historical study tests whether to buy extra power in the day-ahead market. The morning review walks through when to hold an expense report and how to trace a variance to the hourly inputs.
+
+## Historical study
+
+On 274 evaluation days in 2025, buying 5 MWh extra in every weekday peak hour reduced a simulated NYC buyer’s energy cost by **$52,452 (0.15%)**. It also raised costs on 125 of the 197 days it changed the bill. A rule calibrated on January–March saved less. The case study traces the difference to actual NYISO prices and shows how much of the benefit came from a few days.
+
+- [Read the case study](STUDY.md) for the recommendation, the strongest counterexample, and the assumptions.
+- To run the interactive study on Windows, install Node.js 22+ and run `pwsh -File download-study.ps1`. Open [study.html](study.html). The chart, daily CSV, and hourly ledger are generated from the official archives on your machine.
 
 ## Try the review
 
-Open [index.html](index.html) from the project folder in a current browser. The demo runs locally with no install.
+Open [index.html](index.html) for the simulated PJM Western Hub review. It runs locally with no install.
 
 1. Choose **Cold snap**. At 18:00 Eastern, the buyer used 130 MWh after scheduling 108 MWh. The extra 22 MWh at $480/MWh cost $10,560. Add $7,776 for the day-ahead purchase and the hour comes to **$18,336**.
 2. Choose **Broken inputs**. The daily total is withheld. In **Input review & sign-off**, apply the confirmed 17:00 schedule and then restore the 18:00 demo price. With only one correction, the report stays on hold.
@@ -18,6 +25,6 @@ All bundled prices, volumes, and correction records are fictional. Winter Storm 
 
 ## Check the math
 
-From the project folder, run `node --test model.test.js` with Node.js 22 or newer. The tests cover shortfalls, surplus energy, negative prices, the price and volume breakdown, and the path from a blocked review to a CSV whose rows add up to the signed total.
+Run `node --test` with Node.js 22 or newer. The tests cover settlement math, the price and volume breakdown, sign-off controls, source validation, and whether the study uses future data to set the rule.
 
 [Build plan and sources](BUILD_PLAN.md)

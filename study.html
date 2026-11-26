@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Day-ahead scheduling study | Power Desk Replay</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="study.css">
+  <script defer src="model.js"></script>
+  <script defer src="study-model.js"></script>
+  <script defer src=".local-study/study-data.js"></script>
+  <script defer src="study.js"></script>
+</head>
+<body class="study">
+  <header class="masthead">
+    <div class="wrap masthead-inner">
+      <div><span class="mark" aria-hidden="true">↯</span> Power Desk Replay</div>
+      <a href="index.html">Morning cost review →</a>
+    </div>
+  </header>
+  <main class="wrap">
+    <div class="page-heading">
+      <div>
+        <p class="market-label">NYISO · New York City · 2025</p>
+        <h1>Does buying extra power day ahead pay off?</h1>
+        <p>Historical market prices. Simulated buyer and meter readings.</p>
+      </div>
+    </div>
+    <section class="panel" id="data-needed">
+      <h2>Prepare the historical prices</h2>
+      <p>Run <code>pwsh -File download-study.ps1</code> with Node.js installed, then reload this page. The script downloads the official NYISO archives to this checkout.</p>
+      <p><a href="STUDY.md">Read the findings and methodology</a></p>
+    </section>
+    <div id="results" hidden>
+      <section class="study-top panel" aria-label="Study controls">
+        <p><strong>Jan–Mar</strong> sets the calibrated rule. <strong>Apr–Dec</strong> tests all three rules across <strong id="day-count"></strong> days.</p>
+        <label>Extra purchase per eligible hour
+          <select id="buffer"><option value="5">5 MWh</option><option value="10">10 MWh</option><option value="0">0 MWh</option></select>
+        </label>
+      </section>
+      <section class="overview" aria-label="Fixed buffer results relative to forecast only" aria-live="polite">
+        <div><h2>Total cost change</h2><strong id="net"></strong><p id="net-detail"></p></div>
+        <div><h2>Days it cost more</h2><strong id="loss-days"></strong><p id="loss-detail"></p></div>
+        <div><h2>Biggest one-day penalty</h2><strong id="penalty"></strong><p id="penalty-date"></p></div>
+      </section>
+      <section class="panel">
+        <div class="panel-title"><h2>Cumulative cost change</h2><span>Relative to forecast only</span></div>
+        <p class="subtle study-note">Below zero means the buyer paid less. The line rises when extra day-ahead purchases cost more.</p>
+        <div class="study-legend"><span>Fixed peak buffer</span><span>Calibrated peak buffer</span></div>
+        <svg id="curve" viewBox="0 0 840 230" role="img" aria-label="Cumulative cost changes by rule. Monthly values are available below."></svg>
+        <p class="hour-review" id="concentration"></p>
+        <details>
+          <summary>Monthly cost changes</summary>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Monthly cost changes">
+            <table><thead><tr><th scope="col">Month</th><th scope="col">Fixed peak buffer</th><th scope="col">Calibrated peak buffer</th></tr></thead><tbody id="months"></tbody></table>
+          </div>
+        </details>
+      </section>
+      <section class="panel">
+        <div class="panel-title"><h2>Compare all three rules</h2><button type="button" class="button outline" id="study-export">Download daily CSV</button></div>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Policy scorecard">
+          <table><thead><tr><th scope="col">Scheduling rule</th><th scope="col">Total cost</th><th scope="col">Change vs forecast</th><th scope="col">Highest daily cost</th><th scope="col">Average of costliest 10%</th><th scope="col">Cheaper / costlier days</th></tr></thead><tbody id="scorecard"></tbody></table>
+        </div>
+        <dl class="rule-list">
+          <div><dt>Forecast only</dt><dd>Buy the full load forecast day ahead. Settle any difference at the real-time price.</dd></div>
+          <div><dt>Fixed peak buffer</dt><dd>Buy extra between 07:00 and 23:00 Eastern on weekdays.</dd></div>
+          <div><dt>Calibrated peak buffer</dt><dd>Buy extra at peak weekday hours where real time averaged higher than day ahead during January–March. <span id="calibrated-hours"></span></dd></div>
+        </dl>
+      </section>
+      <section class="panel" id="day-review">
+        <div class="panel-title"><h2>Trace a day to the hourly ledger</h2></div>
+        <div class="study-top">
+          <div class="study-actions">
+            <button type="button" id="worst" class="button outline">Biggest penalty</button>
+            <button type="button" id="best" class="button outline">Biggest saving</button>
+          </div>
+          <label>Market date <select id="study-date"></select></label>
+        </div>
+        <p class="hour-review" id="day-note" aria-live="polite"></p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Hourly day-ahead costs and buffer effects">
+          <table><thead><tr><th scope="col">Hour ET</th><th scope="col">Forecast<br>MWh</th><th scope="col">Used<br>MWh</th><th scope="col">Day-ahead<br>$/MWh</th><th scope="col">Real-time<br>$/MWh</th><th scope="col">Fixed extra<br>MWh</th><th scope="col">Fixed cost change</th><th scope="col">Calibrated extra<br>MWh</th><th scope="col">Calibrated cost change</th></tr></thead><tbody id="study-hours"></tbody></table>
+        </div>
+      </section>
+      <footer>Energy-only estimate using hourly prices. The two clock-change days are excluded. <a href="STUDY.md">Methods and limitations</a> · <a href="https://oasis.nyiso.com/">NYISO OASIS</a></footer>
+    </div>
+  </main>
+</body>
+</html>
