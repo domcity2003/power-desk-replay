@@ -2,15 +2,15 @@
 
 Power Desk Replay follows two decisions a power analyst faces. The historical study tests whether to buy extra power in the day-ahead market. The morning review walks through when to hold the daily cost report and how to trace a variance to the hourly inputs.
 
-![Historical scheduling study: cumulative cost change by rule, uncertainty interval and scorecard](docs/study.png)
+![Historical scheduling study: cumulative cost change by rule, uncertainty intervals and scorecard](docs/study.png)
 
 ## Historical study
 
-On 274 evaluation days in 2025, buying 5 MWh extra in every weekday peak hour reduced a simulated NYC buyer’s energy cost by **$52,452 (0.15%)**. It also raised costs on 125 of the 197 days it changed the bill. A rule calibrated on January–March saved less. A block bootstrap puts the 95% interval at −$212,735 to +$56,078, so the saving is not distinguishable from zero and the memo recommends keeping the forecast-only schedule. The case study traces the difference to actual NYISO prices and shows how much of the benefit came from a few days.
+The simulated buyer takes 1.5% of real NYC zone load (about 87 MWh an hour), using NYISO's actual integrated load and its day-before load forecast for 2025. Over 274 evaluation days its forecast misses cost **$182,900**, and they were not random. Shuffling the same misses across days gives an average of $8,917; the real figure beat all 2,000 shuffles. A buffer that fires only when the load forecast is high saved the most (**$93,027, 0.27%**) but its 95% interval, −$254,529 to +$10,917, still reaches zero and two heat-wave days supply most of the gain. The memo recommends keeping the forecast-only schedule and paper-trading the high-load rule. A fixed weekday peak buffer saved $52,452 and raised costs on 125 of the 197 days it changed the bill.
 
-- [Read the case study](STUDY.md) for the recommendation, the strongest counterexample, and the assumptions.
-- Open [study.html](study.html) in a browser. The New York City prices it needs are bundled in [data/study-data.js](data/study-data.js), derived from NYISO's public day-ahead and real-time zonal archives.
-- To rebuild that file from the official archives on Windows, install Node.js 22+ and run `pwsh -File download-study.ps1`. The test suite checks that the bundled file matches the source fingerprint and reproduces the memo's headline totals.
+- [Read the case study](STUDY.md) for the recommendation, the forecast-error analysis, and the assumptions.
+- Open [study.html](study.html) in a browser. The data it needs is bundled in [data/study-data.js](data/study-data.js), derived from NYISO's public day-ahead and real-time price, actual load and load forecast archives.
+- To rebuild that file from the official archives on Windows, install Node.js 22+ and run `powershell -ExecutionPolicy Bypass -File download-study.ps1`. The test suite checks that the bundled file matches the source fingerprint and reproduces the memo's headline numbers.
 
 ## Try the review
 
@@ -30,6 +30,6 @@ All bundled prices, volumes, and correction records are fictional. Winter Storm 
 
 ## Check the math
 
-Run `node --test` with Node.js 22 or newer. The tests cover settlement math, the price and volume breakdown, sign-off controls, source validation, and whether the study uses future data to set the rule.
+Run `node --test` with Node.js 22 or newer. The tests cover settlement math, the price and volume breakdown, sign-off controls, source validation, whether the study's rules use future data, and the forecast-error cost identity.
 
 [Build plan and sources](BUILD_PLAN.md)
