@@ -99,35 +99,37 @@ if (globalThis.marketStudyData) {
   function renderStudy() {
     result = MarketStudy.evaluate(data, Number($("buffer").value));
     const { days, summary, hours } = result;
-    const [baseline, fixed] = summary;
-    worst = days.reduce((max, day) => dayDelta(day, 1) > dayDelta(max, 1) ? day : max);
-    best = days.reduce((min, day) => dayDelta(day, 1) < dayDelta(min, 1) ? day : min);
-    $("worst").disabled = dayDelta(worst, 1) <= 0;
-    $("best").disabled = dayDelta(best, 1) >= 0;
+    // The headline tiles follow the high-load buffer, the rule the memo discusses.
+    const lead = 3;
+    const baseline = summary[0], rule = summary[lead];
+    worst = days.reduce((max, day) => dayDelta(day, lead) > dayDelta(max, lead) ? day : max);
+    best = days.reduce((min, day) => dayDelta(day, lead) < dayDelta(min, lead) ? day : min);
+    $("worst").disabled = dayDelta(worst, lead) <= 0;
+    $("best").disabled = dayDelta(best, lead) >= 0;
     $("day-count").textContent = days.length;
-    $("net").textContent = delta(fixed.total - baseline.total);
-    $("net-detail").textContent = "Fixed buffer vs forecast only";
-    const changedDays = fixed.lowerCostDays + fixed.higherCostDays;
-    $("loss-days").textContent = changedDays ? fixed.higherCostDays + " / " + changedDays : "0";
-    $("loss-detail").textContent = "Days when the fixed buffer changed cost";
-    $("penalty").textContent = delta(dayDelta(worst, 1));
-    $("penalty-date").textContent = dayDelta(worst, 1) > 0 ? worst.date + " · Fixed buffer" : "No higher-cost day";
-    const [first, second] = [...days].sort((a, b) => dayDelta(a, 1) - dayDelta(b, 1));
-    const topTwo = dayDelta(first, 1) + dayDelta(second, 1);
+    $("net").textContent = delta(rule.total - baseline.total);
+    $("net-detail").textContent = "High-load buffer vs forecast only";
+    const changedDays = rule.lowerCostDays + rule.higherCostDays;
+    $("loss-days").textContent = changedDays ? rule.higherCostDays + " / " + changedDays : "0";
+    $("loss-detail").textContent = "Days when the high-load buffer changed cost";
+    $("penalty").textContent = delta(dayDelta(worst, lead));
+    $("penalty-date").textContent = dayDelta(worst, lead) > 0 ? worst.date + " · High-load buffer" : "No higher-cost day";
+    const [first, second] = [...days].sort((a, b) => dayDelta(a, lead) - dayDelta(b, lead));
+    const topTwo = dayDelta(first, lead) + dayDelta(second, lead);
     $("concentration").textContent = topTwo < 0
-      ? "The fixed buffer saved " + money(-topTwo) + " across " + first.date + " and " + second.date +
-        ". Without those dates, its total cost change was " + delta(fixed.total - baseline.total - topTwo) + "."
-      : "The fixed buffer produced no savings days.";
-    const lines = [1, 2, 3].filter(index => summary[index].total !== baseline.total).map(index => {
+      ? "The high-load buffer saved " + money(-topTwo) + " across " + first.date + " and " + second.date +
+        ". Without those dates, its total cost change was " + delta(rule.total - baseline.total - topTwo) + "."
+      : "The high-load buffer produced no savings days.";
+    const intervals = [3, 1, 2].filter(index => summary[index].total !== baseline.total).map(index => {
       const interval = MarketStudy.bootstrap(days, index);
-      const note = document.createElement("p");
-      note.className = "hour-review";
-      note.textContent = summary[index].policy + ": resampling the test period in seven-day blocks puts the total change between " +
-        delta(interval.low) + " and " + delta(interval.high) + " (95% interval). In " +
-        Math.round(interval.shareNotSaving * 100) + "% of resamples it saved nothing.";
-      return note;
+      return summary[index].policy + " " + delta(interval.low) + " to " + delta(interval.high) +
+        " (" + Math.round(interval.shareNotSaving * 100) + "% of resamples saved nothing)";
     });
-    $("uncertainty").replaceChildren(...lines);
+    const note = document.createElement("p");
+    note.className = "hour-review";
+    note.textContent = intervals.length ? "95% intervals for the total change, resampling the test period in seven-day blocks: " +
+      intervals.join(" · ") + "." : "";
+    $("uncertainty").replaceChildren(...(intervals.length ? [note] : []));
     $("high-load-hours").textContent = result.highLoadHours.toLocaleString("en-US") + " of " + (days.length * 24).toLocaleString("en-US") + " evaluation hours";
     renderImbalance(days);
     const enabledHours = hours.flatMap((enabled, hour) => enabled ? [labelHour(hour)] : []);

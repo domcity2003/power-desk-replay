@@ -2,6 +2,8 @@
 
 Power Desk Replay follows two decisions a power analyst faces. The historical study tests whether to buy extra power in the day-ahead market. The morning review walks through when to hold the daily cost report and how to trace a variance to the hourly inputs.
 
+**Live:** [historical study](https://domcity2003.github.io/power-desk-replay/study.html) · [morning cost review](https://domcity2003.github.io/power-desk-replay/) — both run in the browser with no install.
+
 ![Historical scheduling study: cumulative cost change by rule, uncertainty intervals and scorecard](docs/study.png)
 
 ## Historical study
@@ -9,12 +11,12 @@ Power Desk Replay follows two decisions a power analyst faces. The historical st
 The simulated buyer takes 1.5% of real NYC zone load (about 87 MWh an hour), using NYISO's actual integrated load and its day-before load forecast for 2025. Over 274 evaluation days its forecast misses cost **$182,900**, and they were not random. Shuffling the same misses across days gives an average of $8,917; the real figure beat all 2,000 shuffles. A buffer that fires only when the load forecast is high saved the most (**$93,027, 0.27%**) but its 95% interval, −$254,529 to +$10,917, still reaches zero and two heat-wave days supply most of the gain. The memo recommends keeping the forecast-only schedule and paper-trading the high-load rule. A fixed weekday peak buffer saved $52,452 and raised costs on 125 of the 197 days it changed the bill.
 
 - [Read the case study](STUDY.md) for the recommendation, the forecast-error analysis, and the assumptions.
-- Open [study.html](study.html) in a browser. The data it needs is bundled in [data/study-data.js](data/study-data.js), derived from NYISO's public day-ahead and real-time price, actual load and load forecast archives.
+- Open the [live study](https://domcity2003.github.io/power-desk-replay/study.html), or [study.html](study.html) locally. The data it needs is bundled in [data/study-data.js](data/study-data.js), derived from NYISO's public day-ahead and real-time price, actual load and load forecast archives.
 - To rebuild that file from the official archives on Windows, install Node.js 22+ and run `powershell -ExecutionPolicy Bypass -File download-study.ps1`. The test suite checks that the bundled file matches the source fingerprint and reproduces the memo's headline numbers.
 
 ## Try the review
 
-Open [index.html](index.html) for the simulated PJM Western Hub review. It runs locally with no install.
+Open the [live review](https://domcity2003.github.io/power-desk-replay/) (or [index.html](index.html) locally) for the simulated PJM Western Hub review.
 
 ![Morning cost review: hourly prices, cost drivers and sign-off](docs/review.png)
 
