@@ -1,3 +1,4 @@
+:root { --slate: #3b4f8f; }
 .study .masthead a { color: #e0eee4; font-size: .85rem; }
 .study .page-heading { margin-bottom: 18px; }
 .study .market-label { color: var(--teal); font-weight: 700; font-size: .83rem; letter-spacing: .025em; margin: 0 0 8px; }
@@ -8,7 +9,8 @@
 .study select { font: inherit; padding: .4rem; border: 1px solid #9aab9f; border-radius: 4px; background: white; color: var(--ink); margin-left: 5px; }
 .study-legend { color: var(--muted); font-size: .8rem; margin-top: 12px; }
 .study-legend span::before { content: ""; display: inline-block; width: 16px; border-top: 3px solid var(--teal); vertical-align: middle; margin-right: 6px; }
-.study-legend span:last-child::before { border-color: var(--accent); border-top-style: dashed; }
+.study-legend span:nth-child(2)::before { border-color: var(--accent); border-top-style: dashed; }
+.study-legend span:nth-child(3)::before { border-color: var(--slate); border-top-style: dotted; }
 #curve { display: block; width: 100%; height: auto; margin: 4px 0 10px; overflow: visible; }
 #curve text { fill: var(--muted); font-family: inherit; font-size: 15px; }
 .study summary { cursor: pointer; color: var(--teal); font-weight: 650; width: fit-content; }
